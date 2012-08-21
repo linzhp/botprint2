@@ -1,12 +1,12 @@
 function ChassisHandler(view, options) {
 	var self = {
-		appEvents: ['chassisSelfIntersecting', 'chassisShapeUpdated'],
+		appEvents: ['chassisSelfIntersecting', 'chassisAdapted'],
 		
 		chassisSelfIntersecting: function(payload) {
 			view.warn();
 		},
 		
-		chassisShapeUpdated: function(payload) {
+		chassisAdapted: function(payload) {
 			var chassis = JSON.parse(payload.chassis);
 			view.updateShape(chassis.shape);
 		}

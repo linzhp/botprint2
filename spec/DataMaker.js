@@ -4,7 +4,7 @@ function DataMaker(){
 	var options = {
 		name: "Wall-E",
 		app: radio,
-		algs: []
+		algs: {}
 	};
 
 	var robot	= new Robot(options);
@@ -34,10 +34,10 @@ function DataMaker(){
 
 	var parts	= [
 		chassis,
-		new Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }}),
-		new Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }}),
-		new Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }}),
-		new Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }})
+		Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }}),
+		Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }}),
+		Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }}),
+		Wheel({name:"Wheel", app: radio, dimensions: { w:50, h:70, d:0 }})
 	];
 
 	parts.forEach(function(elem){

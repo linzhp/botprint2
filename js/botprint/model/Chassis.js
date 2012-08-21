@@ -21,6 +21,10 @@ function Chassis (opts){
 		
 		accept: function(visitor) {
 			return visitor.visitChassis(this);
+		},
+		
+		adapt: function() {
+			self.radio.trigger(ApplicationEvents.chassisAdapted, {chassis: JSON.stringify(self)});
 		}
 	};
 

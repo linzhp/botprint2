@@ -1,6 +1,6 @@
 function Router(view, options) {
 	// private variable
-	var robotModel = Robot({app:options.app, algs: [ChassisAdjustingAlgorithm]});
+	var robotModel = Robot({app:options.app, algs: {chassis: ChassisAdjustingAlgorithm}});
 	
 	var self = {
 		appEvents: ['partUpdated', 'wheelDeleted', 'partAdded', 'saveChassis'],
@@ -8,7 +8,7 @@ function Router(view, options) {
 		partAdded: function(payload) {
 			var partAttr = JSON.parse(payload.part);
 			var partClass = eval(partAttr.name);
-			var part = partClass();
+			var part = partClass({app:options.app});
 			$.extend(part, partAttr);
 			robotModel.install(part);
 		},

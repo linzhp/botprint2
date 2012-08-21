@@ -57,10 +57,12 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 				 *
 				 **/
 				var data = self.parts;
-				algs.forEach(function (A) {
-					var a = A(data, self.radio);
-					a.perform();
-				});
+				if(algs.wheel)
+					// snapping wheels to chassis
+					algs.wheel(data).perform();
+				if(algs.chassis)
+					// Adjusting chassis to fit wheels
+					algs.chassis(data).perform();
 			}
 		},
 
@@ -89,8 +91,10 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 		 */
 		install: function(part) {
 			self.parts.push(part);
-			if(self.validate()){
+			if(self.validateChassis()){
 				self.assemble();
+			}
+			if(self.validateWheels()) {
 				self.update();
 			}
 		},
@@ -98,8 +102,10 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 		updatePart: function(part) {
 			var existingPart = self._getPart(part.id);
 			$.extend(existingPart, part);
-			if(self.validate()){
+			if(self.validateChassis()){
 				self.assemble();
+			}
+			if(self.validateWheels()) {
 				self.update();
 			}
 		},
@@ -136,8 +142,10 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 					return;
 				}
 			});
-			if(self.validate()){
+			if(self.validateChassis()){
 				self.assemble();
+			}
+			if(self.validateWheels()) {
 				self.update();
 			}
 		},

@@ -1,4 +1,4 @@
-function ChassisAdjustingAlgorithm(parts, radio) {
+function ChassisAdjustingAlgorithm(parts) {
 	var self = {
 		perform: function() {
 			var wheels = [], chassis;
@@ -26,7 +26,7 @@ function ChassisAdjustingAlgorithm(parts, radio) {
 			});
 			
 			chassis.shape = shape;
-			radio.trigger(ApplicationEvents.chassisShapeUpdated, {chassis: JSON.stringify(chassis)});
+			chassis.adapt();
 		}
 	};
 	
