@@ -37,16 +37,10 @@ describe("Robot", function(){
 			expect(found.name).toEqual("LightSensor");
 		});
 
-		it("should be persisted once assembled", function(){
-			spyOn(robot, 'persist');
-			robot.assemble();
-			expect(robot.persist).toHaveBeenCalledWith(jasmine.any(Array));
-		});
-		
 		it('should serialize parts', function() {
 			var json = JSON.stringify(robot);
 			expect(json.indexOf('super')).toBeLessThan(0);
-			expect(json.indexOf('"path":[["M"')).toBeGreaterThan(0);
+			expect(json.indexOf('"skeleton":[["M"')).toBeGreaterThan(0);
 		});
 		
 		it('should deserialize chassis', function() {
@@ -54,7 +48,7 @@ describe("Robot", function(){
 			var attrs = JSON.parse(json);
 			var dRobot = Robot();
 			$.extend(dRobot, attrs);
-			expect(dRobot.chassis.path.length).toBeGreaterThan(0);
+			expect(dRobot.chassis.skeleton.length).toBeGreaterThan(0);
 		});
 	});
 

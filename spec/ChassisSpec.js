@@ -16,19 +16,28 @@ describe('A chassis', function() {
 			['Z']
 		];
 	
+	var path3 = [
+		['M', 349, 262],
+		['L', 285, 377],
+		['L', 448, 392],
+		['L', 339, 425],
+		['Z']
+	];
 	var chassis1;
 	beforeEach(function(){
-		chassis1 = Chassis({path: path1});
+		chassis1 = Chassis({skeleton: path1});
 	});
 	
 	it('should detect self intersecting', function() {
 		expect(chassis1.isSelfIntersecting()).toBe(false);
-		chassis1.path = path2;
+		chassis1.skeleton = path2;
+		expect(chassis1.isSelfIntersecting()).toBe(true);
+		chassis1.skeleton = path3;
+debugger;
 		expect(chassis1.isSelfIntersecting()).toBe(true);
 	});
 	
 	it('should serialize path and name', function() {
-debugger;
 		var cJSON = JSON.stringify(chassis1);
 		var pJSON = JSON.stringify(path1);
 		expect(cJSON.indexOf(pJSON)).not.toBeLessThan(0);

@@ -57,14 +57,10 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 				 *
 				 **/
 				var data = self.parts;
-				toArray(algs).forEach(function (elem) {
-					// e.g., function(data){ AlgorithmX(data).perform(); }
-					data = elem.call(data);
+				algs.forEach(function (A) {
+					var a = A(data, self.radio);
+					a.perform();
 				});
-
-				// persist the assembled robot in a format understood by
-				// a 3D printing system. e.g., JSON.
-				self.persist(data);
 			}
 		},
 
@@ -93,13 +89,19 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 		 */
 		install: function(part) {
 			self.parts.push(part);
-			self.validate();
+			if(self.validate()){
+				self.assemble();
+				self.update();
+			}
 		},
 		
 		updatePart: function(part) {
 			var existingPart = self._getPart(part.id);
 			$.extend(existingPart, part);
-			self.validate();
+			if(self.validate()){
+				self.assemble();
+				self.update();
+			}
 		},
 
 		/**
@@ -134,13 +136,14 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 					return;
 				}
 			});
-			self.validate();
+			if(self.validate()){
+				self.assemble();
+				self.update();
+			}
 		},
 
 		validate: function() {
-			if(self.validateChassis() && self.validateWheels()) {
-				self.update();
-			}
+			return self.validateChassis() && self.validateWheels();
 		},
 		
 		validateWheels: function() {
@@ -168,7 +171,6 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 				self.radio.trigger(ApplicationEvents.chassisSelfIntersecting, {});
 				return false;
 			} else {
-				self.radio.trigger(ApplicationEvents.chassisValidated, {});
 				return true;
 			}
 		},

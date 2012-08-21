@@ -27,12 +27,16 @@ function Edge2DHandler(view, options) {
 		},
 		
 		click: function(payload) {
-			view.target.deselect();
-			var points = view.target.points;
-			points.splice(options.pathIndex+1, 0, {x: payload.x, y: payload.y});
-			view.target.redraw();
-			
-			view.target.select();
+			var chassis2D = view.target;
+			var skeleton = chassis2D.skeleton;
+			var path = skeleton.attrs.path;
+			path.splice(options.pathIndex+1, 0, ['L', payload.x, payload.y]);
+			skeleton.attr({path: path});
+			var chassis = Chassis({skeleton: path,
+									  transform: skeleton.transform(),
+									  app: options.app,
+									  id: chassis2D.id});
+			chassis.update();
 		}
 	};
 	

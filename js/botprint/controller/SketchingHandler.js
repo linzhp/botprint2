@@ -11,15 +11,15 @@ function SketchingHandler(view, options) {
 			var x = payload.x;
 			var y = payload.y;
 
-			if(this.shape){
+			if(this.skeleton){
 				// Extend the path
-				var path = this.shape.attrs.path;
-				this.shape.attr('path', path +' L ' + x + ' ' + y);
+				var path = this.skeleton.attrs.path;
+				this.skeleton.attr('path', path +' L ' + x + ' ' + y);
 			}else{
 				// Create a new path
 				var draw = view.draw;
-				this.shape = draw.path('M '+x+' '+y+' L ' + x + ' ' + y);
-				this.shape.attr(view.shapeAttributes);
+				this.skeleton = draw.path('M '+x+' '+y+' L ' + x + ' ' + y);
+				this.skeleton.attr(view.shapeAttributes);
 			}
 		},
 		
@@ -27,34 +27,34 @@ function SketchingHandler(view, options) {
 			var x = payload.x;
 			var y = payload.y;
 
-			if(this.shape){
+			if(this.skeleton){
 				// Modify the last path element
-				var path = this.shape.attrs.path;
+				var path = this.skeleton.attrs.path;
 				var last = path[path.length - 1];
 				last[1] = x;
 				last[2] = y;
-				this.shape.attr('path', path);
+				this.skeleton.attr('path', path);
 			}
 		},
 		
 		dblClick: function(payload){
-			if(this.shape){
-				var path = this.shape.attrs.path;
+			if(this.skeleton){
+				var path = this.skeleton.attrs.path;
 				/* click event handler is called twice
 				 * before this. Two pop operations from path
 				 * are to offset the effect of two click events
 				 */ 
 				path.pop();
 				path.pop();
-				this.shape.attr({path: path +'Z', stroke: null});
-				var chassis2D = Chassis2D(this.shape, {app:options.app});
+				this.skeleton.attr({path: path +'Z', stroke: 'black', fill: null});
+				var chassis2D = Chassis2D(this.skeleton, {app:options.app, shapeAttributes:view.shapeAttributes});
 				view.doneSketching(chassis2D);
-				var chassis = Chassis({path: this.shape.attrs.path,
-									  transform: this.shape.transform(),
+				var chassis = Chassis({skeleton: this.skeleton.attrs.path,
+									  transform: this.skeleton.transform(),
 									  app: options.app,
 									  id: chassis2D.id});
 				chassis.create();
-				this.shape = null;
+				this.skeleton = null;
 			}
 		}
 	};

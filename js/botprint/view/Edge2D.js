@@ -2,10 +2,11 @@
  * @author Zhongpeng Lin
  */
 function Edge2D(start, path, target, options) {
-	var draw = target.elem.paper;
+	var targetSVG = (target.elem||target.skeleton);
+	var draw = targetSVG.paper;
 	var svg = draw.path('M '+start.x+' '+start.y+' '+path);
 	svg.attr({opacity: 0, 'stroke-width': 10});
-	svg.insertAfter(target.elem);
+	svg.insertAfter(targetSVG);
 	svg.node.style.cursor = 'crosshair';
 
 	var self = {

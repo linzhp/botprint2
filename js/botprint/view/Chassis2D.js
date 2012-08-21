@@ -1,33 +1,22 @@
-function Chassis2D(svg, options) {
+function Chassis2D(skeleton, options) {
 	var self = {
-		elem: svg,
+		skeleton: skeleton,
 		vertices: [],
 		edges: [],
 		points: [],
 		id: new Date().getTime(),
 		
 		set color(c) {
-			svg.attr({fill: c});
+			self.elem.attr({fill: c});
 		},
 		
 		get color(){
-			return svg.attrs.fill;
+			return self.elem.attrs.fill;
 		},
 		
 		select: function() {
-			self.glow = svg.glow({color: self.color});
-			var path = svg.attrs.path;
-			
-			self.points.forEach(function(p, index){
-				var widgetOptions = {app: options.app, pathIndex: index};
-				var vertex = Vertex2D(p,
-					self,
-					widgetOptions);					
-				self.vertices.push(vertex);
-				var edge = Edge2D(p, path[index+1], self, widgetOptions);
-				self.edges.push(edge);
-			});
-			
+			self.glow = self.elem.glow({color: self.color});
+			self.showWidgets(self.elem);
 			this.selected = true;
 		},
 		
@@ -36,6 +25,67 @@ function Chassis2D(svg, options) {
 				self.glow.remove();
 				self.glow = null;
 			}
+			self.hideWidgets();
+			this.selected = false;
+		},
+		
+		warn: function() {
+			self.skeleton.attr({stroke: 'red'});
+			if(self.selected)
+				self.deselect();
+			if(self.elem){
+				self.elem.hide();
+			}
+			self.showWidgets(self.skeleton);
+		},
+		
+		unwarn: function() {
+			self.skeleton.attr({stroke: 'black'});
+			self.elem.show();
+			// remove widgets based on skeleton
+			self.hideWidgets();
+		},
+		
+		updateShape: function(path) {
+			if(self.elem) {
+				self.elem.attr({path: path});
+			} else {
+				var draw = self.skeleton.paper;
+				self.elem = draw.path(path);
+				self.elem.attr(options.shapeAttributes);
+				
+				var selectionHandler = SelectionHandler(Selectable(self), {app: options.app});
+				selectionHandler.enable();
+				self.trigger(UserEvents.click, {});
+			}
+			self.unwarn();
+			if(self.selected) {
+				self.deselect();
+				self.select();
+			}
+		},
+		
+		showWidgets: function(target) {
+			if(self.vertices.length>0)
+				return;
+			var path = target.attrs.path;
+			path.forEach(function(action, index) {
+				var length = action.length;
+				if(length < 3)
+					return;
+				var p = {x:action[length-2], y:action[length-1]}
+				var widgetOptions = {app: options.app, pathIndex: index};
+				var vertex = Vertex2D(p,
+					self,
+					widgetOptions);
+				self.vertices.push(vertex);
+				var edge = Edge2D(p, path[index+1], self, widgetOptions);
+				self.edges.push(edge);
+			});
+
+		},
+		
+		hideWidgets: function() {
 			while(self.vertices.length > 0){
 				var vertex = self.vertices.pop();
 				vertex.remove();
@@ -43,54 +93,14 @@ function Chassis2D(svg, options) {
 			while(self.edges.length > 0) {
 				var edge = self.edges.pop();
 				edge.remove();
-			}
-			this.selected = false;
-		},
-		
-		warn: function() {
-			svg.attr({stroke: 'red'});
-		},
-		
-		unwarn: function() {
-			svg.attr({stroke: null});
-		},
-		
-		redraw: function() {
-			// Redraw a Catmull-Rom curve
-			var path;
-			self.points.forEach(function(p, index) {
-				if(index == 0) {
-					path = ['M', p.x, p.y, 'R'];
-				} else {
-					path.push(p.x, p.y);
-				}
-			});
-			path.push('Z');
-			svg.attr('path', path);
+			}			
 		}
 	};
 	
 	Mixable(self).mix(View());
 	
-	var polygonPath = svg.attrs.path;
-	polygonPath.forEach(function(action, index){
-		switch(action[0]){
-			case 'M':
-				self.points.push({x: action[1], y: action[2]});
-				break;
-			case 'L':
-				self.points.push({x: action[1], y: action[2]});
-				break;
-		}
-	});
-	self.redraw();
-	
-	var selectionHandler = SelectionHandler(Selectable(self), {app: options.app});
-	selectionHandler.enable();
-	self.trigger(UserEvents.click, {});
-	
-	var errorHandler = ChassisValidationHandler(self, {app: options.app});
-	errorHandler.enable();
+	var cHandler = ChassisHandler(self, {app: options.app});
+	cHandler.enable();
 	
 	return self;
 }

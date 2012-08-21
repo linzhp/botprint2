@@ -11,15 +11,18 @@ var IntersectionDetection = {
 			else
 				return false;
 		}
-		
 		var intersect;
 		for(var i = 1; i < path.length; i++) {
 			var start1 = endPoint(path[i-1]);
-			var end1 = new Vector2D(path[i][5], path[i][6]);
+			var end1 = endPoint(path[i]);
 			for(var j = i+1; j < path.length; j++) {
-				var start2 = endPoint(path[j-1]);
+				var start2 = endPoint(path[j-1]), end2;
+				if(path[j][0] == 'Z'){
+					end2 = new Vector2D(path[0][1], path[0][2]);
+				} else {
+					end2 = endPoint(path[j]);					
+				}
 				if(path[i][0] == 'C' && path[j][0] == 'C'){
-					var end2 = new Vector2D(path[j][5], path[j][6]);
 					intersect = Intersection.intersectBezier3Bezier3(
 						start1,
 						new Vector2D(path[i][1], path[i][2]),
@@ -30,7 +33,11 @@ var IntersectionDetection = {
 						new Vector2D(path[j][3], path[j][4]),
 						end2
 					);
-				} // other line intersections can be added here when needed
+				} else if(path[i][0] == 'L' && (path[j][0] == 'L' || path[j][0] == 'Z')) {
+					intersect = Intersection.intersectLineLine(start1, end1,
+															   start2, end2);
+				}// other line intersections can be added here when needed
+				
 				var crossPonts = intersect.points.select(function(p){
 					// return true only if p is not any of the vertices
 					return !(equal(p, start1) || equal(p, end1) || equal(p, start2) || equal(p, end2));

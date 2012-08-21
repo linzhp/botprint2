@@ -4,16 +4,12 @@ function DataMaker(){
 	var options = {
 		name: "Wall-E",
 		app: radio,
-		algs: {
-			wheel:   function() {console.log("Snapped!");  return []; },
-			chassis: function() {console.log("Sketched!"); return []; }
-		}
-
+		algs: []
 	};
 
 	var robot	= new Robot(options);
 	var chassis = new Chassis({name:"Chassis", app: radio,
-							  path: [
+							  skeleton: [
 								['M',236,311],
 								['C', 220,339,312,459,347,454],
 								['C', 381,449,459,304,441,281],

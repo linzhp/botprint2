@@ -1,6 +1,6 @@
 function Router(view, options) {
 	// private variable
-	var robotModel = Robot({app:options.app});
+	var robotModel = Robot({app:options.app, algs: [ChassisAdjustingAlgorithm]});
 	
 	var self = {
 		appEvents: ['partUpdated', 'wheelDeleted', 'partAdded', 'saveChassis'],

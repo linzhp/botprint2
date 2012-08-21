@@ -6,26 +6,31 @@
 function VertexDraggingHandler(view, options) {
 	
 	var self = {
+		dragStart: function(payload) {
+			self.super.dragStart(payload);
+			view.target.elem.attr({opacity: 0.3});
+		},
+		
 		dragMove: function(payload) {
 			self.super.dragMove(payload);
 			var position = view.position;
-			var target = view.target;
-			// modify the target shape, which is the chassis
-			target.points[options.pathIndex] = position;
-			target.redraw();
+			var skeleton = view.target.skeleton;
+			var path = skeleton.attrs.path;
+			path[options.pathIndex] = ['L', position.x, position.y];
+			skeleton.attr({path: path});
 		},
 		
 		dragEnd: function(payload) {
 			self.super.dragEnd(payload);
-			var shape = view.target.elem;
-			var chassis = Chassis({path: shape.attrs.path,
-								  transform: shape.transform(),
-								  app: options.app,
-								  id: view.target.id});
+			var chassis2D = view.target;
+			chassis2D.elem.attr({opacity: 1});
+			var skeleton = chassis2D.skeleton;
+			var path = skeleton.attrs.path;
+			var chassis = Chassis({skeleton: path,
+									  transform: skeleton.transform(),
+									  app: options.app,
+									  id: chassis2D.id});
 			chassis.update();
-			// force to redraw the edges
-			view.target.deselect();
-			view.target.select();
 		}
 	};
 	Mixable(self).mix(DraggingHandler(view, options));

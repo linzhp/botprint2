@@ -9,13 +9,14 @@ function Chassis (opts){
 	var options = {isLeaf: false, name: 'Chassis'};
 	$.extend(options, opts || {});
 	var self = {
-		serializable: ['id', 'name', 'path', 'transform'],
-
-		path: options.path || [],
+		serializable: ['id', 'name', 'skeleton', 'transform', 'shape'],
+		
+		// path of the polygon
+		skeleton: options.skeleton || [],
 		transform: options.transform,
 		
 		isSelfIntersecting: function() {
-			return IntersectionDetection.isSelfIntersecting(self.path);
+			return IntersectionDetection.isSelfIntersecting(self.skeleton);
 		},
 		
 		accept: function(visitor) {
