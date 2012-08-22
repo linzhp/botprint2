@@ -13,5 +13,6 @@ var ApplicationEvents = {
 	chassisAdapted: 'The chassis shape has been adapted to wheel positions, {chassis: json}',
 	partAdded: 'A new part has been added, payload: {part: json}',
 	saveChassis: 'User wants to save the chassis. payload: {}',
-	wheelSnapped: 'A wheel has been snapped to the chassis. payload: {wheel: json}'
+	wheelSnapped: 'A wheel has been snapped to the chassis. payload: {wheel: json}',
+	wheelDetached: 'A wheel has been detached from the chassis. payload: {wheelID: id}'
 };

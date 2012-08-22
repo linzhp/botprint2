@@ -33,7 +33,6 @@ describe('A chassis', function() {
 		chassis1.skeleton = path2;
 		expect(chassis1.isSelfIntersecting()).toBe(true);
 		chassis1.skeleton = path3;
-debugger;
 		expect(chassis1.isSelfIntersecting()).toBe(true);
 	});
 	

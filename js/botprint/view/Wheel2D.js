@@ -51,6 +51,16 @@ function Wheel2D(svg, options) {
 			if(this.removeButton) {
 				this.removeButton.remove();
 			}
+		},
+		
+		warn: function() {
+			self.normalColor = self.color;
+			self.color = 'red';
+		},
+		
+		unwarn: function() {
+			if(self.normalColor)
+				self.color = self.normalColor;
 		}
 	};
 	
@@ -69,9 +79,9 @@ function Wheel2D(svg, options) {
 	// making it removable
 	self = Removable2D(self);
 	
-	var errorHandler = WheelValidationHandler(self, options);
-	errorHandler.enable();
-	self.handlers.push(errorHandler);
+	var wHandler = WheelHandler(self, options);
+	wHandler.enable();
+	self.handlers.push(wHandler);
 	
 	return self;
 }

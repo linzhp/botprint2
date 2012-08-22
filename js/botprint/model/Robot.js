@@ -93,9 +93,9 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 			self.parts.push(part);
 			if(self.validateChassis()){
 				self.assemble();
-			}
-			if(self.validateWheels()) {
-				self.update();
+				if(self.validateWheels()) {
+					self.update();
+				}
 			}
 		},
 		
@@ -104,9 +104,9 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 			$.extend(existingPart, part);
 			if(self.validateChassis()){
 				self.assemble();
-			}
-			if(self.validateWheels()) {
-				self.update();
+				if(self.validateWheels()) {
+					self.update();
+				}
 			}
 		},
 
@@ -144,9 +144,9 @@ function Robot (opts/*e.g., {name: "RobotA", bus: EventBus(), algs: {wheel:W, ch
 			});
 			if(self.validateChassis()){
 				self.assemble();
-			}
-			if(self.validateWheels()) {
-				self.update();
+				if(self.validateWheels()) {
+					self.update();
+				}
 			}
 		},
 

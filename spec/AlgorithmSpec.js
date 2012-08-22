@@ -41,19 +41,35 @@ describe("PCG-Algorithms", function(){
 	});
 
 	describe("Once ready for snapping wheels", function(){
-		it("should bring wheels to chassis edges", function(){
-			var skeleton = [['M', 0, 0], ['L', 0, 1], ['L', 1, 1], ['Z']];
-			var parts = dataMaker.parts;
+		var parts;
+		beforeEach(function() {
+			parts = dataMaker.parts;
+			var skeleton = [['M', 0, 0], ['L', 100, 0], ['L', 100, 100], ['Z']];
 			// the chassis
 			parts[0].skeleton = skeleton;
 			// a wheel
 			parts[1].x = 0;
-			parts[1].y = 0.5;
-			var radio = Bindable();
-			var algo = WheelSnappingAlgorithm(parts, radio);
+			parts[1].y = 50;
+			// another wheel
+			parts[2].x = 0;
+			parts[2].y = 1000;
+		});
+		
+		it('should bring wheels to chassis edges', function(){
+			spyOn(parts[1], 'snap');
+			var algo = WheelSnappingAlgorithm(parts);
 			algo.perform();
-			expect(parts[1].x).toBe(0.5);
-			expect(parts[1].y).toBe(0.5);
+			expect(parts[1].x).toBe(50);
+			expect(parts[1].y).toBe(50);
+			expect(parts[1].snap).toHaveBeenCalled();
+		});
+		
+		it('should detach a wheel if it is too far way from the chassis', function() {
+			var wheel = parts[2];
+			spyOn(wheel, 'detach');
+			var algo = WheelSnappingAlgorithm(parts);
+			algo.perform();
+			expect(wheel.detach).toHaveBeenCalled();
 		});
 	});
 });

@@ -16,7 +16,8 @@ function VertexDraggingHandler(view, options) {
 			var position = view.position;
 			var skeleton = view.target.skeleton;
 			var path = skeleton.attrs.path;
-			path[options.pathIndex] = ['L', position.x, position.y];
+			path[options.pathIndex][1] = position.x;
+			path[options.pathIndex][2] = position.y;
 			skeleton.attr({path: path});
 		},
 		

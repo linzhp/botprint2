@@ -8,6 +8,8 @@ function Robot3D(robotModel) {
 	robotModel.parts.forEach(function(p) {
 		var part = eval(p.name)();
 		$.extend(part, p);
+		if(part.isDetached)
+			return;
 		var p3D = part.accept(visitor);
 		THREE.GeometryUtils.merge(geometry, p3D);
 	});

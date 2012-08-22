@@ -69,7 +69,9 @@ function Chassis2D(skeleton, options) {
 			if(self.vertices.length>0)
 				return;
 			var path = target.attrs.path;
-			path.forEach(function(action, index) {
+			var numPoints = self.skeleton.attrs.path.length - 1;
+			for(var index = 0; index < numPoints; index++) {
+				var action = path[index];
 				var length = action.length;
 				if(length < 3)
 					return;
@@ -81,7 +83,7 @@ function Chassis2D(skeleton, options) {
 				self.vertices.push(vertex);
 				var edge = Edge2D(p, path[index+1], self, widgetOptions);
 				self.edges.push(edge);
-			});
+			}
 
 		},
 		

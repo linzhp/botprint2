@@ -9,10 +9,16 @@ function Wheel (opts){
 	var snappedAt = { x:0, y:0, z:0};
 
 	var self = {
-		serializable: ['id', 'name', 'x','y'],
+		serializable: ['id', 'name', 'x','y', 'isDetached'],
 		
-		snap: function(position){
-			snappedAt = position;
+		snap: function(){
+			this.isDetached = false;
+			this.radio.trigger(ApplicationEvents.wheelSnapped, {wheel: JSON.stringify(this)});
+		},
+		
+		detach: function() {
+			this.isDetached = true;
+			this.radio.trigger(ApplicationEvents.wheelDetached, {wheelID: this.id});
 		},
 
 		getSnappingLocation: function(){
