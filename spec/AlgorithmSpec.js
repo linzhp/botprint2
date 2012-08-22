@@ -59,7 +59,7 @@ describe("PCG-Algorithms", function(){
 			spyOn(parts[1], 'snap');
 			var algo = WheelSnappingAlgorithm(parts);
 			algo.perform();
-			expect(parts[1].x).toBe(50);
+			expect(parts[1].x).toBe(50-PartsFolio.wheel.axis);
 			expect(parts[1].y).toBe(50);
 			expect(parts[1].snap).toHaveBeenCalled();
 		});

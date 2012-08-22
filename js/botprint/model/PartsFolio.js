@@ -5,7 +5,8 @@
 var PartsFolio = {
 	wheel: {
 		width: 30,
-		radius: 30
+		radius: 30,
+		axis: 30
 	},
 	chassis: {
 		height: 50

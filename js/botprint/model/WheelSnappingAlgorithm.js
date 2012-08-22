@@ -30,7 +30,11 @@ function WheelSnappingAlgorithm(parts) {
 						}
 					});
 					if(w.x != minX){
-						w.x = minX;
+						if(w.x < minX) {
+							w.x = minX - PartsFolio.wheel.axis;
+						} else {
+							w.x = minX + PartsFolio.wheel.axis;
+						}
 						w.snap();
 					}
 				} else {
