@@ -22,18 +22,26 @@ function WheelSnappingAlgorithm(parts) {
 				var intersect = Intersection.intersectLinePolygon(lineStart, lineEnd, polygon);
 				if(intersect.status == 'Intersection') {
 					var minDist = 10000, minX, points = intersect.points;
+					// crossing number used to decide if the wheel is inside the polygon
+					var crossingNum = 0;
 					points.forEach(function(p, i) {
 						var dist = Math.abs(p.x-w.x);
 						if(dist < minDist){
 							minDist = dist;
 							minX = p.x;
 						}
+						if(p.x < w.x) {
+							crossingNum++;
+						}
 					});
+					
+					// if it is inside, side == -1
+					var side = crossingNum % 2 == 0 ? 1 : -1;
 					if(w.x != minX){
 						if(w.x < minX) {
-							w.x = minX - PartsFolio.wheel.axis;
+							w.x = minX - side * PartsFolio.wheel.axis;
 						} else {
-							w.x = minX + PartsFolio.wheel.axis;
+							w.x = minX + side * PartsFolio.wheel.axis;
 						}
 						w.snap();
 					}

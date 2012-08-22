@@ -53,6 +53,9 @@ describe("PCG-Algorithms", function(){
 			// another wheel
 			parts[2].x = 0;
 			parts[2].y = 1000;
+			// a wheel inside the chassis
+			parts[3].x = 60;
+			parts[3].y = 50;
 		});
 		
 		it('should bring wheels to chassis edges', function(){
@@ -70,6 +73,15 @@ describe("PCG-Algorithms", function(){
 			var algo = WheelSnappingAlgorithm(parts);
 			algo.perform();
 			expect(wheel.detach).toHaveBeenCalled();
+		});
+		
+		it('should extrude wheels out', function() {
+			spyOn(parts[3], 'snap');
+			var algo = WheelSnappingAlgorithm(parts);
+			algo.perform();
+			expect(parts[3].x).toBe(50-PartsFolio.wheel.axis);
+			expect(parts[3].y).toBe(50);
+			expect(parts[3].snap).toHaveBeenCalled();			
 		});
 	});
 });
